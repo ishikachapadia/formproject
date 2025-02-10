@@ -7,7 +7,9 @@ import "../styles/form.css";
 export default function Home() {
   return (
     <main>
+      <Header />
       <Form />
+      <Footer />
     </main>
   );
 }

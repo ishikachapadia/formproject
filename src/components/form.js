@@ -17,6 +17,8 @@ export default function Form() {
     city: "",
     province: "",
     postalCode: "",
+    password: "",
+    confirmPassword: "",
     guardianName: "",
     guardianEmail: "",
     guardianPhone: "",
@@ -76,6 +78,8 @@ export default function Form() {
   const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   const postalCodePattern = /^[A-Za-z]\d[A-Za-z] ?\d[A-Za-z]\d$/;
   const phonePattern = /^\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/;
+  const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/; 
+  
 
   const validateForm = () => {
     const errors = {};
@@ -132,6 +136,18 @@ export default function Form() {
       errors.postalCode = "Postal code is required.";
     } else if (!postalCodePattern.test(formData.postalCode)) {
       errors.postalCode = "Please enter a valid postal code.";
+    }
+
+    if (!formData.password.trim()) {
+      errors.password = "Password is required.";
+    } else if (!passwordPattern.test(formData.password)) {
+      errors.password = "Password must be at least 8 characters long, include at least one uppercase letter, one lowercase letter, one number, and one special character.";
+    }
+  
+    if (!formData.confirmPassword.trim()) {
+      errors.confirmPassword = "Please confirm your password.";
+    } else if (formData.confirmPassword !== formData.password) {
+      errors.confirmPassword = "Passwords do not match.";
     }
 
     if (showGuardianForm) {
@@ -193,7 +209,7 @@ export default function Form() {
 
       {isPopupVisible && (
         <div className="popup">
-          <div className="popup-content">
+          <div className="popupContent">
             <h2>How to Participate</h2>
             <ol>
               <li>
@@ -213,7 +229,7 @@ export default function Form() {
               </li>
             </ol>
             <div className="submitButton">
-              <button onClick={() => setIsPopupVisible(false)} className="close-btn">
+              <button onClick={() => setIsPopupVisible(false)} className="closeBtn">
                 Back
               </button>
             </div>
@@ -222,127 +238,143 @@ export default function Form() {
       )}
 
       {showGuardianForm ? (
-        <div className="form-container">
-          <div className="form-group">
+        <div className="formContainer">
+          <div className="formGroup">
+          <div className="inputGroup2">
             <label>Guardian Name:</label>
             <input
               type="text"
               name="guardianName"
+              placeholder="Enter guardian's full name"
               value={formData.guardianName}
               onChange={handleChange}
-              className={`form-input ${formErrors.guardianName ? 'input-error' : ''}`}
+              className={`formInput ${formErrors.guardianName ? 'inputError' : ''}`}
             />
             {formErrors.guardianName && <span className="error">{formErrors.guardianName}</span>}
           </div>
-          <div className="form-group">
+          </div>
+          <div className="formGroup">
+          <div className="inputGroup2">
             <label>Guardian Email:</label>
             <input
               type="email"
               name="guardianEmail"
+              placeholder="Enter guardian's address"
               value={formData.guardianEmail}
               onChange={handleChange}
-              className={`form-input ${formErrors.guardianEmail ? 'input-error' : ''}`}
+              className={`formInput ${formErrors.guardianEmail ? 'inputError' : ''}`}
             />
             {formErrors.guardianEmail && <span className="error">{formErrors.guardianEmail}</span>}
           </div>
-          <div className="form-group">
+          </div>
+          <div className="formGroup">
+          <div className="inputGroup2">
             <label>Guardian Phone Number:</label>
             <input
               type="tel"
               name="guardianPhone"
+              placeholder="Enter guardian's number"
               value={formData.guardianPhone}
               onChange={handleChange}
-              className={`form-input ${formErrors.guardianPhone ? 'input-error' : ''}`}
+              className={`formInput ${formErrors.guardianPhone ? 'inputError' : ''}`}
             />
             {formErrors.guardianPhone && <span className="error">{formErrors.guardianPhone}</span>}
           </div>
+          </div>
 
-          <div className="checkbox-group">
+          <div className="checkboxGroup">
             <label>
               <input
                 type="checkbox"
                 name="consentRules"
                 checked={formData.consentRules}
                 onChange={handleChange}
-                className="form-checkbox"
+                className="formCheckbox"
               />
               I agree to the contest rules and regulations.
             </label>
             {formErrors.consentRules && <span className="error">{formErrors.consentRules}</span>}
           </div>
-          <div className="checkbox-group">
+          <div className="checkboxGroup">
             <label>
               <input
                 type="checkbox"
                 name="consentCommunications"
                 checked={formData.consentCommunications}
                 onChange={handleChange}
-                className="form-checkbox"
+                className="formCheckbox"
               />
               I consent to receiving communications about milk products and sponsors.
             </label>
           </div>
 
           <div className="guardianButton">
-            <button type="button" onClick={() => setShowGuardianForm(false)} className="guardian-submit">
+            <button type="button" onClick={() => setShowGuardianForm(false)} className="guardianSubmit">
               BACK
             </button>
-            <button type="submit" onClick={handleSubmit} className="guardian-submit">
+            <button type="submit" onClick={handleSubmit} className="guardianSubmit">
               SUBMIT
             </button>
           </div>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="form-container">
-          <div className="name-group">
-            <div className="input-group">
+        <form onSubmit={handleSubmit} className="formContainer">
+          <div className="formGroup">
+          <div className="nameGroup">
+            <div className="inputGroup">
               <label htmlFor="firstName">First Name</label>
               <input
                 type="text"
                 id="firstName"
                 name="firstName"
+                placeholder="Enter your first name"
                 value={formData.firstName}
                 onChange={handleChange}
-                className={`form-input ${formErrors.firstName ? 'input-error' : ''}`}
+                className={`formInput ${formErrors.firstName ? 'inputError' : ''}`}
               />
               {formErrors.firstName && <span className="error">{formErrors.firstName}</span>}
             </div>
-            <div className="input-group">
+            <div className="inputGroup">
               <label htmlFor="lastName">Last Name</label>
               <input
                 type="text"
                 id="lastName"
+                placeholder="Enter your last name"
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleChange}
-                className={`form-input ${formErrors.lastName ? 'input-error' : ''}`}
+                className={`formInput ${formErrors.lastName ? 'inputError' : ''}`}
               />
               {formErrors.lastName && <span className="error">{formErrors.lastName}</span>}
             </div>
           </div>
+          </div>
 
-          <div className="form-group">
+          <div className="formGroup">
+          <div className="inputGroup2">
             <label htmlFor="email">Email Address</label>
             <input
               type="email"
               id="email"
               name="email"
+              placeholder="Enter your email"
               value={formData.email}
               onChange={handleChange}
-              className={`form-input ${formErrors.email ? 'input-error' : ''}`}
+              className={`formInput ${formErrors.email ? 'inputError' : ''}`}
             />
             {formErrors.email && <span className="error">{formErrors.email}</span>}
           </div>
+          </div>
 
-          <div className="form-group date-row">
-          <div className="input-group">
+          <div className="formGroup dateRow">
+          <div className="inputGroup">
             <label htmlFor="day">Day</label>
             <select
               id="day"
               name="day"
               value={formData.day}
               onChange={handleChange}
-              className={`form-input ${formErrors.day ? 'input-error' : ''}`}
+              className={`formInput ${formErrors.day ? 'inputError' : ''}`}
             >
               <option value="">Day</option>
               {Array.from({ length: 31 }, (_, i) => (
@@ -354,14 +386,14 @@ export default function Form() {
             {formErrors.day && <span className="error">{formErrors.day}</span>}
           </div>
 
-          <div className="input-group">
+          <div className="inputGroup">
             <label htmlFor="month">Month</label>
             <select
               id="month"
               name="month"
               value={formData.month}
               onChange={handleChange}
-              className={`form-input ${formErrors.month ? 'input-error' : ''}`}
+              className={`formInput ${formErrors.month ? 'inputError' : ''}`}
             >
               <option value="">Month</option>
               <option value="1">January</option>
@@ -380,14 +412,14 @@ export default function Form() {
             {formErrors.month && <span className="error">{formErrors.month}</span>}
           </div>
 
-          <div className="input-group">
+          <div className="inputGroup">
             <label htmlFor="year">Year</label>
             <select
               id="year"
               name="year"
               value={formData.year}
               onChange={handleChange}
-              className={`form-input ${formErrors.year ? 'input-error' : ''}`}
+              className={`formInput ${formErrors.year ? 'inputError' : ''}`}
             >
               <option value="">Year</option>
               {Array.from({ length: new Date().getFullYear() - 1900 + 1 }, (_, i) => {
@@ -403,27 +435,29 @@ export default function Form() {
           </div>
         </div>
 
-
-          <div className="form-group">
+          <div className="formGroup">
+          <div className="inputGroup2">
             <label>House Address</label>
             <input
               type="text"
               name="address"
+              placeholder="Enter your address"
               value={formData.address}
               onChange={handleChange}
-              className={`form-input ${formErrors.address ? 'input-error' : ''}`}
+              className={`formInput ${formErrors.address ? 'inputError' : ''}`}
             />
             {formErrors.address && <span className="error">{formErrors.address}</span>}
           </div>
+          </div>
 
-          <div className="form-group address-row">
-          <div className="form-item">
+          <div className="formGroup addressRow">
+          <div className="inputGroup">
               <label>City</label>
               <select
                 name="city"
                 value={formData.city}
                 onChange={handleChange}
-                className={`form-input ${formErrors.city ? "input-error" : ""}`}
+                className={`formInput ${formErrors.city ? "inputError" : ""}`}
               >
                 <option value="">Select City</option>
                 <option value="Toronto">Toronto</option>
@@ -434,13 +468,13 @@ export default function Form() {
               </select>
               {formErrors.city && <span className="error">{formErrors.city}</span>}
             </div>
-            <div className="form-item">
+            <div className="inputGroup">
               <label>Province</label>
               <select
                 name="province"
                 value={formData.province}
                 onChange={handleChange}
-                className={`form-input ${formErrors.province ? "input-error" : ""}`}
+                className={`formInput ${formErrors.province ? "inputError" : ""}`}
               >
                 <option value="">Select Province</option>
                 <option value="Ontario">Ontario</option>
@@ -456,39 +490,72 @@ export default function Form() {
               </select>
               {formErrors.province && <span className="error">{formErrors.province}</span>}
             </div>
-            <div className="form-item">
+            <div className="inputGroup">
               <label>Postal</label>
               <input
                 type="text"
                 name="postalCode"
+                placeholder="Enter your postal code"
                 value={formData.postalCode}
                 onChange={handleChange}
-                className={`form-input ${formErrors.postalCode ? 'input-error' : ''}`}
+                className={`formInput ${formErrors.postalCode ? 'inputError' : ''}`}
               />
               {formErrors.postalCode && <span className="error">{formErrors.postalCode}</span>}
             </div>
           </div>
 
-          <div className="checkbox-group">
+          <div className="formGroup">
+          <div className="inputGroup2">
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            className={`formInput ${formErrors.password ? 'inputError' : ''}`}
+            placeholder="Enter your password"
+          />
+          {formErrors.password && <span className="error">{formErrors.password}</span>}
+        </div>
+        </div>
+
+        <div className="formGroup">
+        <div className="inputGroup2">
+          <label htmlFor="confirmPassword">Confirm Password</label>
+          <input
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            className={`formInput ${formErrors.confirmPassword ? 'inputError' : ''}`}
+            placeholder="Re-enter your password"
+          />
+          {formErrors.confirmPassword && <span className="error">{formErrors.confirmPassword}</span>}
+        </div>
+        </div>
+
+          <div className="checkboxGroup">
             <label>
               <input
                 type="checkbox"
                 name="isUnder16"
                 checked={formData.isUnder16}
                 onChange={handleChange}
-                className="form-checkbox"
+                className="formCheckbox"
               />
               Check this box if you're below 16 years old.
             </label>
           </div>
-          <div className="checkbox-group">
+          <div className="checkboxGroup">
             <label>
               <input
                 type="checkbox"
                 name="consentRules"
                 checked={formData.consentRules}
                 onChange={handleChange}
-                className="form-checkbox"
+                className="formCheckbox"
                 disabled={!rulesRead} 
               />
               <span className="clickToRead" onClick={handleCheckboxClick}>
@@ -500,7 +567,7 @@ export default function Form() {
 
             {isRulesPopupVisible && (
               <div className="popup">
-                <div className="popup-content">
+                <div className="popupContent">
                   <h2>Contest Rules & Terms</h2>
                   <ol>
                     <li>
@@ -528,7 +595,7 @@ export default function Form() {
                         setIsRulesPopupVisible(false);
                         setRulesRead(true);
                       }}
-                      className="close-btn"
+                      className="closeBtn"
                     >
                       Agreed
                     </button>
@@ -538,21 +605,21 @@ export default function Form() {
             )}
           </div>
 
-          <div className="checkbox-group">
+          <div className="checkboxGroup">
             <label>
               <input
                 type="checkbox"
                 name="consentCommunications"
                 checked={formData.consentCommunications}
                 onChange={handleChange}
-                className="form-checkbox"
+                className="formCheckbox"
               />
               I consent to receiving communications regarding milk products and sponsors.
             </label>
           </div>
 
           <div className="submitButton">
-            <button type="submit" className="form-submit">
+            <button type="submit" className="formSubmit">
               SUBMIT
             </button>
           </div>
